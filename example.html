@@ -1,11 +1,19 @@
 <!DOCTYPE html5>
+
+<!-- DRAGGY-BITS example -->
+
 <html>
 <head>
+	<style type="text/css">
+		body { background: #ddd; margin: 20px; font-family: monospace; font-size: .8em; }
+		#example-div { width: 100px; border: 2px solid #000; padding: 10px; background: #fff; display: inline-block;}
+		#test { text-align: center; margin: 200px auto; font-size: 4em; }
+	</style>
 </head>
 
 <body>
 
-	<div id="example-box" class="draggy">
+	<div id="example-div" class="draggy">
 		blorp<br />
 		blorp<br />
 		blorp<br />
@@ -18,6 +26,14 @@
 	</div>
 	
 	<p id="test">drag the freaking box, cool dude</p>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="draggy-bits.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.draggy').draggyBits();
+});
+</script>
 
 </body>
 </html>
