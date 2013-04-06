@@ -1,11 +1,8 @@
 <!DOCTYPE html5>
-
-<!-- DRAGGY-BITS example -->
-
 <html>
 <head>
 	<style type="text/css">
-		body { background: #ddd; margin: 20px; font-family: monospace; font-size: .8em; }
+		body { background: #ddd; margin: 20px; font-family: monospace; font-size: .9em; }
 		#example-div { width: 100px; border: 2px solid #000; padding: 10px; background: #fff; display: inline-block;}
 		#test { text-align: center; margin: 200px auto; font-size: 4em; }
 	</style>
@@ -14,25 +11,28 @@
 <body>
 
 	<div id="example-div" class="draggy">
-		blorp<br />
-		blorp<br />
-		blorp<br />
-		blorp<br />
-		blorp<br />		
-		blorp<br />
-		blorp<br />
-		blorp<br />
-		blorp
+		Here is a box that is going to be made draggable, using the draggybits jQuery plugin. What fun!
 	</div>
 	
 	<p id="test">drag the freaking box, cool dude</p>
 
+<!-- You need to load jQuery -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+<!-- You need to load draggyBits -->
 <script src="draggy-bits.js"></script>
+
+<!-- You need to call draggyBits function on some element -->
 <script type="text/javascript">
-$(document).ready(function(){
-	$('.draggy').draggyBits();
-});
+	
+	// make all items with class "draggy" draggable
+	$(document).ready(function(){
+		$('.draggy').draggyBits({
+			draggerText : '&harr;',
+			draggerImg : 'dragger.png',
+		});
+	});
+	
 </script>
 
 </body>

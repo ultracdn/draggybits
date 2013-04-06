@@ -1,16 +1,22 @@
 (function( $ ) {
   $.fn.draggyBits = function() {
   
-  	var draggyItem = this;
+  	// get the element we are making draggable and absolute position it
+  	var container = this;
   	this.css('position','absolute');
   	
- 	// add dragger icon to upper-right corner of draggy box
-	draggyItem.prepend('<div class="dragger">[&harr;<span>&harr;</span>]</p>');
+ 	// add draggybits-move icon to upper-right corner of container
+	container.prepend('<div class="draggybits-move">[&harr;]</p>');
 	
 	// start dragging when the icon is clicked
-	$('.dragger').mousedown(function(event) {
-		draggyItem.addClass('dragging');
+	$('.draggybits-move').mousedown(function(event) {
+		container.addClass('draggybits-dragging');
+		
+		
+		// TEST_
 		$('#test').html('dragging');
+		
+		
 		
 		if ( window.getSelection) {
 		    window.getSelection().removeAllRanges();
@@ -26,23 +32,27 @@
 	
 	// stop dragging when the icon is no longer clicked
 	$(window).mouseup(function() {
-		draggyItem.removeClass('dragging');
+		container.removeClass('draggybits-dragging');
+		
+		// TEST_
 		$('#test').html('not dragging');
-		document.onselectstart = resetSelectStart;
+		
+		
+		document.onselectstart = function() { return true; };
 	});
 	
 	// move the dragging box wherever the cursor goes
 	$(window).mousemove(function(event) {
-		draggyItem.each(function() { 
-			if ( !draggyItem.hasClass('dragging') ) {
+		container.each(function() { 
+			if ( !container.hasClass('draggybits-dragging') ) {
 				// nothing to be dragged herrre, Nelly
 			} 
 			else {
-				var position = draggyItem.position();
-				var draggerPosition = draggyItem.find('.dragger').position();
-				console.log('click x: ' + event.pageX + ', dragger left: ' + draggerPosition.left + ', box left: ' + position.left);
+				var position = container.position();
+				var moverPosition = container.find('.draggybits-move').position();
+				console.log('click x: ' + event.pageX + ', draggybits-move left: ' + moverPosition.left + ', box left: ' + position.left);
 
-				draggyItem.css('top', event.pageY).css('left', event.pageX );
+				container.css('top', event.pageY).css('left', event.pageX );
 			}
 		});
 	});
