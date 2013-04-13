@@ -1,10 +1,23 @@
 (function($) {
-	$.fn.draggyBits = function() {
+	$.fn.draggyBits = function( options ) {
 		return this.each(function() {	  
 			
-			var moverX, moverY;
+			var drag, moverX, moverY;
 			var container = $(this);
-			container.prepend('<div class="draggybits-mover">[&harr;]</p>');
+			var settings = $.extend({
+			      'dragText' : '&harr;',
+			      'dragImg' : null
+			    }, options);
+			
+			if ( settings.dragImg == null ) {
+				drag = '<div class="draggybits-mover">' + settings.dragText + '</div>';
+			}
+			else {
+				drag = '<div class="draggybits-mover" style="background-image:url(\'' + settings.dragImg + '\');"> </div>';
+			}
+			
+			container.prepend(drag);
+			
 			if ( container.css('position') != "absolute" ) {
 				container.css('position','absolute');
 			}
@@ -14,6 +27,12 @@
 				container.addClass('draggybits-dragging'); 		
 				moverX = container.position().left - event.pageX;
 				moverY = container.position().top - event.pageY;
+				
+				$(this).each('img', function(){ 
+					$(this).bind('dragstart', function(event) { 
+						event.preventDefault() 
+					});
+				});
 			
 				if ( window.getSelection) {
 				    window.getSelection().removeAllRanges();

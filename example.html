@@ -4,6 +4,7 @@
 	<style type="text/css">
 		body { background: #ddd; margin: 20px; font-family: monospace; font-size: .9em; }
 		.draggy { width: 100px; border: 2px solid #000; padding: 10px; background: #fff; display: block;}
+		.draggybits-mover { width: 25px; height: 25px; background-color: #fff; padding: 2px; border: 2px solid #000; position: absolute; right: -5px; top: -5px; }
 			#example-one { top: 10px; left: 10px; }
 			#example-two { bottom: 200px; left: 200px; background: #aaa; }
 			#example-three { right: 10px; top: 150px; background: #ddd; }
@@ -39,8 +40,8 @@
 	// make all items with class "draggy" draggable
 	$(document).ready(function(){
 		$('.draggy').draggyBits({
-			draggerText : '&harr;',
-			draggerImg : 'dragger.png',
+			dragText : '&harr;',
+			dragImg : 'dragger.png',
 		});
 	});
 	
