@@ -4,7 +4,7 @@
 	var movingClass = 'ui-moving';
     var draggerClass = 'ui-dragger';
     var closerClass = 'ui-closer';
-    var hiderClass = 'ui-hider';
+    var minimizeClass = 'ui-hider';
     var hiddenClass = 'ui-hidden';
 
     var isMoving = false;
@@ -17,7 +17,10 @@
 	var $window = $(window);
 
 	var defaults = {
-		onMinimize : function (e) { return false; }
+		onMinimize : function (e) { return false; },
+		onInit : function (e) { return false; },
+		onClose : function (e) { return false; },
+		onRestore : function (e) { return false; }
 	};
 
 	var methods = {
@@ -29,7 +32,7 @@
 				var $this = $(this).addClass(pluginName);
 				var $dragger = $this.find('.' + draggerClass);
 				var $closer = $this.find('.' + closerClass).click(onCloseClick);
-				var $hider = $this.find('.' + hiderClass).click(onMinimizeClick);
+				var $minimizer = $this.find('.' + minimizeClass).click(onMinimizeClick);
 
 				var options = $.extend(defaults, opts);
 
@@ -37,8 +40,11 @@
 					$this : $this,
 					$dragger : $dragger,
 					$closer : $closer,
-					$hider : $hider,
-					onMinimize : options.onMinimize
+					$minimizer : $minimizer,
+					onMinimize : options.onMinimize,
+					onClose : options.onClose,
+					onInit : options.onInit,
+					onRestore : options.onRestore
 				};
 
 				$this.data(pluginName, data);
@@ -47,12 +53,13 @@
 
 				var css = {
 					top : numDraggers * tileOffset.y,
-					left : numDraggers * tileOffset.x,
+					left : 200 + (numDraggers * tileOffset.x),
 					position : 'absolute'
 				};
 
 				$this.css(css);
 				
+				options.onInit($this);
 			}); 
 		},
 
@@ -64,11 +71,16 @@
 		},
 
 		restore : function () {
-			$(this).removeClass(hiddenClass);
+			var $this = $(this).removeClass(hiddenClass);
+			var data = $this.data(pluginName);			
+			data.onRestore($this);
 		},
 
 		close : function () {
-			$(this).remove();
+			var $this = $(this);
+			var data = $this.data(pluginName);			
+			data.onClose($this);
+			$this.remove();
 		}
 
 	};
