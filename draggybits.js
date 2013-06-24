@@ -1,66 +1,152 @@
 (function($) {
-	$.fn.draggyBits = function( options ) {
-		return this.each(function() {	  
-			
-			var drag, moverX, moverY;
-			var container = $(this);
-			var settings = $.extend({
-			      'dragText' : '&harr;',
-			      'dragImg' : null
-			    }, options);
-			
-			if ( settings.dragImg == null ) {
-				drag = '<div class="draggybits-mover">' + settings.dragText + '</div>';
-			}
-			else {
-				drag = '<div class="draggybits-mover" style="background-image:url(\'' + settings.dragImg + '\');"> </div>';
-			}
-			
-			container.prepend(drag);
-			
-			if ( container.css('position') != "absolute" ) {
-				container.css('position','absolute');
-			}
-				
-			$('.draggybits-mover').mousedown(function(event) {
-				container = $(this).parent('.draggy');
-				container.addClass('draggybits-dragging'); 		
-				moverX = container.position().left - event.pageX;
-				moverY = container.position().top - event.pageY;
-				
-				$(this).each('img', function(){ 
-					$(this).bind('dragstart', function(event) { 
-						event.preventDefault() 
-					});
-				});
-			
-				if ( window.getSelection) {
-				    window.getSelection().removeAllRanges();
-				} 
-				else if (document.selection) {
-				    document.selection.clear();
-				}
-				resetSelectStart = document.onselectstart;
-				document.onselectstart = function() { return false; };
-			});
-			
-			$(window).mouseup(function() {
-				$('.draggybits-dragging').removeClass('draggybits-dragging');
-				document.onselectstart = function() { return true; };
-			});
-			
-			$(window).mousemove(function(event) {
-				container.each(function() { 
-					if ( container.hasClass('draggybits-dragging') ) {
-						container.css({
-							'top': event.pageY + moverY,
-							'left': event.pageX + moverX,
-							'bottom':'inherit'
-						});
-					}
-				});
-			});
-		
-		});  
+
+	var pluginName = 'draggyBits';
+	var movingClass = 'ui-moving';
+    var draggerClass = 'ui-dragger';
+    var closerClass = 'ui-closer';
+    var hiderClass = 'ui-hider';
+    var hiddenClass = 'ui-hidden';
+
+    var isMoving = false;
+	var zIndex = 100;
+	var pos = { x:0, y:0 };
+	var numDraggers = 0;
+	var tileOffset = { x:20, y:20};
+
+	var $current;
+	var $window = $(window);
+
+	var defaults = {
+		onMinimize : function (e) { return false; }
 	};
+
+	var methods = {
+
+		init : function (opts) {
+			
+			return this.each(function() {	  
+			
+				var $this = $(this).addClass(pluginName);
+				var $dragger = $this.find('.' + draggerClass);
+				var $closer = $this.find('.' + closerClass).click(onCloseClick);
+				var $hider = $this.find('.' + hiderClass).click(onMinimizeClick);
+
+				var options = $.extend(defaults, opts);
+
+				var data = {
+					$this : $this,
+					$dragger : $dragger,
+					$closer : $closer,
+					$hider : $hider,
+					onMinimize : options.onMinimize
+				};
+
+				$this.data(pluginName, data);
+
+				numDraggers++;
+
+				var css = {
+					top : numDraggers * tileOffset.y,
+					left : numDraggers * tileOffset.x,
+					position : 'absolute'
+				};
+
+				$this.css(css);
+				
+			}); 
+		},
+
+		minimize : function () {
+			var $this = $(this).addClass(hiddenClass);
+			var data = $this.data(pluginName);
+			console.log(data);
+			data.onMinimize($this);
+		},
+
+		restore : function () {
+			$(this).removeClass(hiddenClass);
+		},
+
+		close : function () {
+			$(this).remove();
+		}
+
+	};
+
+
+
+
+    /*** MODULE DEFINITION ***/
+
+    $.fn[pluginName] = function (method) {
+        if ( methods[method] ) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof method === 'object' || !method) {
+            return methods.init.apply(this,arguments);
+        } else {
+            $.error('Method ' + method + ' does not exist');
+        }
+    };	
+
+
+
+
+    /*** EVENTS HANDLERS ***/
+
+	var onMove = function (e) {
+		var curr = { x: e.pageX, y: e.pageY };
+
+		var dx = curr.x - pos.x;
+		var dy = curr.y - pos.y;
+
+		$current.css({top:"+="+dy, left:"+="+dx});
+
+		pos = curr;
+	};
+
+	var onMouseUp = function (e) {
+		if (!isMoving) {
+			return;
+		}
+
+		$('.' + movingClass).removeClass(movingClass)
+
+		$window.off('mousemove');
+		isMoving = false;
+	};
+
+	var onMouseDown = function (e) {
+		var $this = $(e.target);
+		var isDragger = $this.hasClass(draggerClass);
+
+		if (!isDragger) {
+			return;
+		}
+
+		e.preventDefault()
+		pos = { x: e.pageX, y: e.pageY };
+		zIndex++;
+
+		$current = $this.parents('.'+ pluginName).css("z-index", zIndex).addClass(movingClass);
+		$window.on('mousemove', onMove);
+
+		isMoving = true;
+	};
+
+	var onCloseClick = function (e) {
+		var $this = $(this);
+		var $par = $this.parents('.'+ pluginName);
+			$par[pluginName]('close');
+	};
+
+	var onMinimizeClick = function (e) {
+		var $this = $(this);
+		var $par = $this.parents('.'+ pluginName);
+			$par[pluginName]('minimize');
+	};
+
+	/*** GLOBAL EVENTS ***/
+
+	$(window).mousedown(onMouseDown).mouseup(onMouseUp);
+
 })( jQuery );
