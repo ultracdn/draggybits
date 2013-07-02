@@ -1,15 +1,15 @@
 <!DOCTYPE html5>
 <html>
 <head>
+
+	<!-- make sure to link to the draggybits.css file 
+		or copy its contents to your stylesheet. 
+		don't be a sucka. -->
+	<link rel="stylesheet" href="css/draggybits.css" />
+	
 	<style type="text/css">
 		body { background: #ddd; margin: 20px; font-family: monospace; font-size: .9em; }
 		.draggy { width: 100px; border: 2px solid #000; background: #fff; display: block;}
-		.draggy.ui-hidden { display: none;}
-		.draggy .controls { background:#ffffff;  margin:0; padding:0; border-bottom:1px solid #aaaaaa; height: 25px;line-height:0;  }
-		.draggy .controls img { float:left; margin:0; padding:0; line-height:0; }
-		.draggy .controls img.ui-dragger { cursor:move; }		
-		.draggy .controls img.ui-closer { cursor:pointer; }		
-		.draggy .controls img.ui-hider { cursor:pointer; }		
 		.draggy .inner { padding: 10px; }
 	</style>
 </head>
@@ -18,7 +18,7 @@
 
 	<ul id="hiddenlist"></ul>
 
-	<div id="example-one" class="draggy" title="Lebron James">
+	<div id="example-one" class="draggy" title="Example One Div">
 		<div class="controls">
 			<img class="ui-dragger" src="http://dummyimage.com/50x25/aaf/000&text=<>" />
 			<img class="ui-hider" src="http://dummyimage.com/25x25/afa/000&text=_" />
@@ -40,7 +40,7 @@
 		</div>	
 	</div>
 	
-	<div id="example-three" class="draggy" title="Carmelo Anthony">
+	<div id="example-three" class="draggy" title="Space Jam 2">
 		<div class="controls">
 			<img class="ui-dragger" src="http://dummyimage.com/50x25/aaf/000&text=<>" />
 			<img class="ui-hider" src="http://dummyimage.com/25x25/afa/000&text=_" />
@@ -52,7 +52,7 @@
 	</div>
 	
 
-<!-- You need to load jQuery -->
+<!-- load jquery, then the draggybits.js file. no h8rs. -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="draggybits.js"></script>
 
@@ -60,6 +60,7 @@
 
 	$(function (){
 		
+		// nick, babyboy, you need to document this plz
 		var onMinimizeListClick = function (e) {
 			var $this = $(this);
 			console.log($this)
@@ -72,7 +73,7 @@
 			$('<li></li>').append($a).appendTo("#hiddenlist")
 		};
 
-
+		// call the draggyBits function on the items you want to draggy-ble
 		$('.draggy').draggyBits({onMinimize:onMinimize});
 
 	});

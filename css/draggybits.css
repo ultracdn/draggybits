@@ -1,0 +1,13 @@
+/** 
+* draggybits
+* by css perverts aka nick & jenn
+*/
+
+.draggy.ui-hidden { display: none;}
+
+/** controls **/
+.draggy .controls { background:#ffffff;  margin:0; padding:0; border-bottom:1px solid #aaaaaa; height: 25px; line-height:0;  }
+.draggy .controls img { float:left; margin:0; padding:0; line-height:0; }
+.draggy .controls img.ui-dragger { cursor:move; }		
+.draggy .controls img.ui-closer { cursor:pointer; }		
+.draggy .controls img.ui-hider { cursor:pointer; }	
